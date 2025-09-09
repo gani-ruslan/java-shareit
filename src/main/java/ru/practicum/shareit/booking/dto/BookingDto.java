@@ -1,7 +1,8 @@
 package ru.practicum.shareit.booking.dto;
 
 /**
- * TODO Sprint add-bookings.
+ * TODO Create Booking DTO.
  */
+
 public class BookingDto {
 }
