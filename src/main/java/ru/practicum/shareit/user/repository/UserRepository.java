@@ -1,12 +1,17 @@
 package ru.practicum.shareit.user.repository;
 
-import ru.practicum.shareit.common.repository.BaseRepository;
+import java.util.List;
+import java.util.Optional;
 import ru.practicum.shareit.user.model.User;
 
-public interface UserRepository extends BaseRepository<User, Long> {
+public interface UserRepository {
+    User save(User user);
 
-    boolean isExistsByEmail(User user);
+    Optional<User> findById(Long id);
 
-    boolean isExistsByEmail(String email);
+    List<User> findAll();
 
+    void deleteById(Long id);
+
+    Boolean existsByEmail(String email);
 }

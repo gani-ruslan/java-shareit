@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.repository.memory;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,10 +16,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     private final ConcurrentHashMap<Long, Item> items = new ConcurrentHashMap<>();
     private final AtomicLong counter = new AtomicLong();
 
-    /* Base repository implementation*/
     @Override
-    public List<Item> findAll() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Item save(Item item) {
+        item.setId(counter.incrementAndGet());
+        items.put(item.getId(), item);
+        return item;
     }
 
     @Override
@@ -31,46 +31,36 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Item create(Item item) {
-        item.setId(counter.incrementAndGet());
-        items.put(item.getId(), item);
-        return item;
-    }
-
-    @Override
-    public Item update(Item item) {
-        items.put(item.getId(), new Item(item));
-        return item;
-    }
-
-    @Override
-    public boolean deleteById(Long itemId) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /* Extend base repository implementation */
-    @Override
-    public List<Item> findByOwnerId(Long ownerId) {
+    public List<Item> findByOwner_Id(Long ownerId) {
         return items.values().stream()
                 .filter(item -> item.getOwner().getId().equals(ownerId))
                 .toList();
     }
 
     @Override
-    public List<Item> findByQuery(String text) {
+    public List<Item> findByOwner_IdOrderByIdAsc(Long ownerId) {
         return items.values().stream()
-                .filter(Item::getAvailable)
-                .filter(item -> search(item.getDescription(), text) ||
-                                     search(item.getName(), text))
+                .filter(item -> item.getOwner().getId().equals(ownerId))
                 .toList();
     }
 
-    /* Helpers */
-    private boolean search(String source, String target) {
-        if (target == null || target.isBlank() || source == null) {
-            return false;
-        }
-        return source.toLowerCase(Locale.ROOT)
-                .contains(target.toLowerCase(Locale.ROOT));
+    @Override
+    public List<Item> search(String text) {
+        String q = text.toLowerCase();
+        return items.values().stream()
+                .filter(i -> Boolean.TRUE.equals(i.getAvailable()))
+                .filter(i -> i.getName().toLowerCase().contains(q) ||
+                        (i.getDescription() != null && i.getDescription().toLowerCase().contains(q)))
+                .toList();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        items.remove(id);
+    }
+
+    @Override
+    public void delete(Item item) {
+        items.remove(item.getId());
     }
 }
