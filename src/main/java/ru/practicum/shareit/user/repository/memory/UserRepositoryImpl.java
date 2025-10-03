@@ -17,10 +17,11 @@ public class UserRepositoryImpl implements UserRepository {
     private final ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
     private final AtomicLong counter = new AtomicLong();
 
-    /* Base repository implementation*/
     @Override
-    public List<User> findAll() {
-        return new ArrayList<>(users.values());
+    public User save(User user) {
+        user.setId(counter.incrementAndGet());
+        users.put(user.getId(), user);
+        return user;
     }
 
     @Override
@@ -31,31 +32,17 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User create(User user) {
-        user.setId(counter.incrementAndGet());
-        users.put(user.getId(), user);
-        return user;
+    public List<User> findAll() {
+        return new ArrayList<>(users.values());
     }
 
     @Override
-    public User update(User user) {
-        users.put(user.getId(), new User(user));
-        return user;
+    public void deleteById(Long userId) {
+        users.remove(userId);
     }
 
     @Override
-    public boolean deleteById(Long userId) {
-        return users.remove(userId) != null;
-    }
-
-    /* Extend base repository implementation */
-    @Override
-    public boolean isExistsByEmail(User user) {
-        return getByEmail(user.getEmail()).isPresent();
-    }
-
-    @Override
-    public boolean isExistsByEmail(String email) {
+    public Boolean existsByEmail(String email) {
         return email != null && getByEmail(email).isPresent();
     }
 
@@ -64,6 +51,5 @@ public class UserRepositoryImpl implements UserRepository {
         return users.values().stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst();
-
     }
 }

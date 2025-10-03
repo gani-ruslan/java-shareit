@@ -1,28 +1,57 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
-@Data
+@Entity
+@Table(name = "items")
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Item {
-    Long id;
-    String name;
-    String description;
-    Boolean available;
-    User owner;
-    Request request;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Item(Item item) {
-        this.id = item.getId();
-        this.name = item.getName();
-        this.description = item.getDescription();
-        this.available = item.getAvailable();
-        this.owner = item.getOwner();
-        this.request = item.getRequest();
+    @Column(nullable = false, length = 255)
+    private String name;
+
+    @Column(length = 1000)
+    private String description;
+
+    @Column(nullable = false)
+    private Boolean available;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
+    @Column(name = "owner_id", insertable = false, updatable = false)
+    private Long ownerId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "request_id")
+    private Request request;
+
+    @Column(name = "request_id", insertable = false, updatable = false)
+    private Long requestId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Item other = (Item) o;
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Hibernate.getClass(this).hashCode();
     }
 }

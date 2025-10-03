@@ -1,13 +1,21 @@
 package ru.practicum.shareit.item.repository;
 
 import java.util.List;
-import ru.practicum.shareit.common.repository.BaseRepository;
+import java.util.Optional;
 import ru.practicum.shareit.item.model.Item;
 
-public interface ItemRepository extends BaseRepository<Item,Long> {
+public interface ItemRepository {
+    Item save(Item item);
 
-    List<Item> findByOwnerId(Long ownerId);
+    Optional<Item> findById(Long id);
 
-    List<Item> findByQuery(String text);
+    List<Item> findByOwner_Id(Long ownerId);
 
+    List<Item> findByOwner_IdOrderByIdAsc(Long ownerId);
+
+    List<Item> search(String text);
+
+    void deleteById(Long id);
+
+    void delete(Item item);
 }

@@ -1,6 +1,8 @@
 package ru.practicum.shareit.user.web;
 
 import java.util.List;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,10 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.user.dto.CreateUserRequest;
-import ru.practicum.shareit.user.dto.UpdateUserRequest;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.dto.UserCreateDto;
+import ru.practicum.shareit.user.dto.UserPatchDto;
+import ru.practicum.shareit.user.dto.UserResponseDto;
 import ru.practicum.shareit.user.service.UserService;
 
 @RestController
@@ -23,31 +24,30 @@ import ru.practicum.shareit.user.service.UserService;
 @Validated
 public class UserController {
     private final UserService userService;
-    private final UserMapper mapper;
 
     @GetMapping
-    public List<UserDto> findAll() {
-        return mapper.toDto(userService.findAll());
+    public List<UserResponseDto> findAll() {
+        return userService.findAll();
     }
 
     @GetMapping("/{userId}")
-    public UserDto findById(@PathVariable("userId") Long userId) {
-        return mapper.toDto(userService.findById(userId));
+    public UserResponseDto findById(@PathVariable("userId") @Positive Long userId) {
+        return userService.findById(userId);
     }
 
     @PostMapping
-    public UserDto create(@RequestBody @Validated CreateUserRequest user) {
-        return mapper.toDto(userService.create(mapper.toDomainCreate(user)));
+    public UserResponseDto save(@RequestBody @Valid UserCreateDto user) {
+        return userService.save(user);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto update(@RequestBody @Validated UpdateUserRequest user,
-                          @PathVariable("userId") Long userId) {
-        return mapper.toDto(userService.update(userId, user));
+    public UserResponseDto patch(@RequestBody @Valid UserPatchDto user,
+                                  @PathVariable("userId") @Positive Long userId) {
+        return userService.patch(userId, user);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteById(@PathVariable("userId") Long userId) {
+    public void deleteById(@PathVariable("userId") @Positive Long userId) {
         userService.deleteById(userId);
     }
 }
