@@ -24,7 +24,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      - SPRING_PROFILES_ACTIVE=pg
+      - SPRING_PROFILES_ACTIVE=pg,reset
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
       - SPRING_DATASOURCE_USERNAME=shareit
       - SPRING_DATASOURCE_PASSWORD=shareit
