@@ -11,7 +11,7 @@ import ru.practicum.shareit.request.repository.RequestRepository;
 @Repository
 @Profile("jpa")
 @RequiredArgsConstructor
-public class RequestRepositoryJpaAdapter implements RequestRepository{
+public class RequestRepositoryJpaAdapter implements RequestRepository {
 
     private final RequestJpaRepository jpa;
 
