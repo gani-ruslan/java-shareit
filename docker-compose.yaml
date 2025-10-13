@@ -3,11 +3,11 @@ services:
     image: postgres:16
     container_name: shareit-postgres
     environment:
-      - POSTGRES_PASSWORD=shareit
-      - POSTGRES_USER=shareit
-      - POSTGRES_DB=shareit
+      POSTGRES_PASSWORD: shareit
+      POSTGRES_USER: shareit
+      POSTGRES_DB: shareit
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      test: ["CMD-SHELL", "pg_isready -q -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -15,21 +15,19 @@ services:
       - "6541:5432"
 
   server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+    build: ./server
     image: shareit-server
     container_name: shareit-server
     depends_on:
       db:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
-      - SPRING_DATASOURCE_USERNAME=shareit
-      - SPRING_DATASOURCE_PASSWORD=shareit
-      - SPRING_SQL_INIT_MODE=always
-      - SPRING_SQL_INIT_SCHEMA_LOCATIONS=classpath:schema.sql
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/shareit
+      SPRING_DATASOURCE_USERNAME: shareit
+      SPRING_DATASOURCE_PASSWORD: shareit
+      SPRING_SQL_INIT_MODE: always
+      SPRING_SQL_INIT_SCHEMA_LOCATIONS: classpath:schema.sql
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
     ports:
       - "9090:9090"
     healthcheck:
@@ -39,15 +37,13 @@ services:
       retries: 30
 
   gateway:
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
+    build: ./gateway
     image: shareit-gateway
     container_name: shareit-gateway
     depends_on:
       server:
         condition: service_healthy
     environment:
-      - SHAREIT_SERVER_URL=http://server:9090
+      SHAREIT_SERVER_URL: http://server:9090
     ports:
       - "8080:8080"
