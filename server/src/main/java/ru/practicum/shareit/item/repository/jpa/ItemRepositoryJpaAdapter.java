@@ -4,13 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 
 @Repository
-@Profile("jpa")
 @RequiredArgsConstructor
 public class ItemRepositoryJpaAdapter implements ItemRepository {
 

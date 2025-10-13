@@ -23,7 +23,7 @@ name        VARCHAR(255) NOT NULL,
 description VARCHAR(1000),
 available   BOOLEAN NOT NULL,
 owner_id    BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-request_id  BIGINT REFERENCES requests(id) ON DELETE CASCADE
+request_id  BIGINT REFERENCES item_requests(id) ON DELETE CASCADE
 );
 CREATE INDEX IF NOT EXISTS ix_items_owner   ON items(owner_id);
 CREATE INDEX IF NOT EXISTS ix_items_request ON items(request_id);

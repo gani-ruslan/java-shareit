@@ -3,13 +3,11 @@ package ru.practicum.shareit.user.repository.jpa;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 @Repository
-@Profile("jpa")
 @RequiredArgsConstructor
 public class UserRepositoryJpaAdapter implements UserRepository {
 

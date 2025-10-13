@@ -2,13 +2,11 @@ package ru.practicum.shareit.comments.repository.jpa;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.comments.model.Comment;
 import ru.practicum.shareit.comments.repository.CommentRepository;
 
 @Repository
-@Profile("jpa")
 @RequiredArgsConstructor
 public class CommentJpaRepositoryAdapter implements CommentRepository {
 

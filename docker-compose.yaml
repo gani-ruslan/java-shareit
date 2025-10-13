@@ -14,20 +14,6 @@ services:
     ports:
       - "6541:5432"
 
-  server-reset:
-    image: shareit-server
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      - SPRING_PROFILES_ACTIVE=pg,jpa,reset
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
-      - SPRING_DATASOURCE_USERNAME=shareit
-      - SPRING_DATASOURCE_PASSWORD=shareit
-    command: [ "sh", "-c", "java -jar /app/app.jar & pid=$!; sleep 12; kill $pid || true" ]
-    restart: "no"
-    profiles: ["init"]
-
   server:
     build:
       context: ./server
@@ -40,8 +26,8 @@ services:
       server-reset:
         condition: service_completed_successfully
     environment:
-      - SPRING_PROFILES_ACTIVE=pg,jpa
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
+      - SPRING_PROFILES_ACTIVE=pg
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/shareit
       - SPRING_DATASOURCE_USERNAME=shareit
       - SPRING_DATASOURCE_PASSWORD=shareit
     ports:
